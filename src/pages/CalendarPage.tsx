@@ -56,8 +56,8 @@ export function CalendarPage() {
   const monthStart = useMemo(() => cursor.calendar("jalali").startOf("month"), [cursor]);
   const monthEnd = useMemo(() => cursor.calendar("jalali").endOf("month"), [cursor]);
 
-  const startId = useMemo(() => jalaliDayId(monthStart), [monthStart]);
-  const endId = useMemo(() => jalaliDayId(monthEnd), [monthEnd]);
+    const startId = jalaliDayId(monthStart);
+    const endId   = jalaliDayId(monthEnd);
 
   useEffect(() => {
     let alive = true;
