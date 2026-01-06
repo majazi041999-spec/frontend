@@ -8,12 +8,14 @@ function getCookie(name: string) {
 export async function apiFetch<T>(url: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers || {});
   const hasBody = init.body !== undefined && init.body !== null;
+  const method = String(init.method || "GET").toUpperCase();
 
   if (hasBody && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
 
-  // CSRF برای درخواست‌های دارای body
+  // CSRF برای درخواست‌های state-changing (POST/PUT/PATCH/DELETE)
   const xsrf = getCookie("XSRF-TOKEN");
-  if (xsrf && hasBody) headers.set("X-XSRF-TOKEN", decodeURIComponent(xsrf));
+  const needsCsrf = !["GET", "HEAD", "OPTIONS"].includes(method);
+  if (xsrf && needsCsrf) headers.set("X-XSRF-TOKEN", decodeURIComponent(xsrf));
 
   const res = await fetch(url, { ...init, headers, credentials: "include" });
 

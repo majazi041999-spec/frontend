@@ -1,7 +1,12 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { apiFetch } from "@/lib/api";
 
-export type Me = { email: string; roles: string[] } | null;
+export type Me = {
+  id: number;
+  fullName: string;
+  email: string;
+  roles: string[];
+} | null;
 
 type AuthCtx = {
   user: Me;

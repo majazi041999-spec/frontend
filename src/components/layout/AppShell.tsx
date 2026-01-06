@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { Bell, LogOut, LayoutDashboard, ListChecks, Users } from "lucide-react";
+import { LogOut, LayoutDashboard, ListChecks, Users } from "lucide-react";
 import { useAuth } from "@/features/auth/auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 
 export function AppShell() {
   const { user, logout } = useAuth();
@@ -22,20 +25,27 @@ export function AppShell() {
 
   return (
     <div className="app-bg min-h-screen w-full">
-      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[280px_1fr] p-4 gap-4">
+      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[300px_1fr] p-4 gap-4">
         {/* Sidebar */}
-        <aside className="hidden lg:block rounded-3xl border border-zinc-800/60 bg-zinc-900/30 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.35)] p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xl font-semibold tracking-tight text-zinc-50">Taskchi</div>
-              <div className="text-xs text-zinc-400 mt-1">Team Workspace</div>
+        <aside className="hidden lg:block surface p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_30px_rgba(16,185,129,.45)]" />
+              <div>
+                <div className="text-xl font-semibold tracking-tight text-foreground">Taskchi</div>
+                <div className="text-xs text-muted-foreground mt-1">Team Workspace</div>
+              </div>
             </div>
-            <Badge className="bg-zinc-950/40 border border-zinc-800 text-zinc-200 rounded-xl">
+
+            <Badge
+              variant="outline"
+              className="rounded-xl bg-background/40 backdrop-blur border-border/60 text-muted-foreground"
+            >
               v0.1
             </Badge>
           </div>
 
-          <Separator className="my-4 bg-zinc-800/60" />
+          <Separator className="my-4 bg-border/60" />
 
           <nav className="space-y-2 text-sm">
             <NavItem to="/" icon={<LayoutDashboard size={18} />} label="داشبورد" end />
@@ -43,50 +53,49 @@ export function AppShell() {
             <NavItem to="/admin/users" icon={<Users size={18} />} label="کاربران" />
           </nav>
 
-          <div className="mt-6 rounded-2xl border border-zinc-800/60 bg-zinc-950/20 p-3">
-            <div className="text-xs text-zinc-400 mb-2">حساب کاربری</div>
+          <div className="mt-6 rounded-2xl border border-border/60 bg-background/30 p-3">
+            <div className="text-xs text-muted-foreground mb-2">حساب کاربری</div>
             <div className="flex items-center gap-3">
               <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-zinc-950/50 border border-zinc-800 text-zinc-200">
+                <AvatarFallback className="bg-background/50 border border-border/60 text-foreground">
                   {user?.email?.slice(0, 1)?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
 
               <div className="min-w-0">
-                <div className="text-sm font-medium truncate text-zinc-50">{user?.email}</div>
-                <div className="text-xs text-zinc-400 truncate">
+                <div className="text-sm font-medium truncate text-foreground">{user?.email}</div>
+                <div className="text-xs text-muted-foreground truncate">
                   {user?.roles?.includes("ROLE_ADMIN") ? "Admin" : "Staff"}
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="mt-4 text-xs text-muted-foreground/90">
+            نسخه آزمایشی • محیط داخلی
+          </div>
         </aside>
 
         {/* Main */}
-        <main className="rounded-3xl border border-zinc-800/60 bg-zinc-900/25 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.35)] p-6 min-w-0">
-          <header className="flex items-center justify-between mb-6">
+        <main className="surface p-6 min-w-0">
+          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <div className="text-lg font-semibold text-zinc-50">{pageTitle}</div>
-              <div className="text-sm text-zinc-400 mt-1">
+              <div className="text-lg font-semibold text-foreground">{pageTitle}</div>
+              <div className="text-sm text-muted-foreground mt-1">
                 خوش آمدی{user?.email ? `، ${user.email}` : ""}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="rounded-2xl border-zinc-800 bg-zinc-950/20 hover:bg-zinc-950/35 text-zinc-200"
-              >
-                <Bell size={18} className="ml-2" />
-                اعلان‌ها
-              </Button>
+              <ThemeToggle />
+
+              <NotificationCenter />
 
               <Button
                 type="button"
                 onClick={() => logout()}
                 variant="outline"
-                className="rounded-2xl border-zinc-800 bg-zinc-950/20 hover:bg-zinc-950/35 text-zinc-200"
+                className="rounded-2xl border-border/60 bg-background/40 backdrop-blur hover:bg-accent/60"
               >
                 <LogOut size={18} className="ml-2" />
                 خروج
@@ -94,7 +103,6 @@ export function AppShell() {
             </div>
           </header>
 
-          {/* 👇 اینجا محتوای صفحات رندر میشه */}
           <Outlet />
         </main>
       </div>
@@ -118,15 +126,15 @@ function NavItem({
       to={to}
       end={end}
       className={({ isActive }) =>
-        [
-          "flex items-center gap-3 rounded-2xl px-3 py-2.5 border transition",
+        cn(
+          "group flex items-center gap-3 rounded-2xl px-3 py-2.5 border transition",
           isActive
-            ? "bg-zinc-950/30 border-zinc-800 text-zinc-50 shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
-            : "bg-transparent border-transparent text-zinc-300 hover:bg-zinc-950/20 hover:border-zinc-800/60",
-        ].join(" ")
+            ? "bg-primary/10 border-primary/25 text-foreground shadow-sm"
+            : "bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-accent/60 hover:border-border/60"
+        )
       }
     >
-      <div className="text-zinc-300">{icon}</div>
+      <div className="transition opacity-80 group-hover:opacity-100">{icon}</div>
       <div className="font-medium">{label}</div>
     </NavLink>
   );
