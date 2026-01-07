@@ -17,7 +17,7 @@ import { ChevronLeft, ChevronRight, Loader2, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { apiFetch } from "@/lib/api";
-import { MeetingDialog, type MeetingDto as MeetingDtoFE } from "@/components/meetings/MeetingDialog";
+import {MeetingDialog, type MeetingDto as MeetingDtoFE} from "@/components/meetings/MeetingDialog";
 import { useAuth } from "@/features/auth/auth";
 
 type HolidayDto = {
